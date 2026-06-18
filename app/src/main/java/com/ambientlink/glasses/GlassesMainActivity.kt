@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import com.ambientlink.glasses.data.RelayClient
+import com.ambientlink.core.RelayClient
 import com.ambientlink.glasses.ui.HomeScreen
 
 /**

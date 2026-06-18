@@ -34,6 +34,9 @@ android {
 }
 
 dependencies {
+    // Shared relay client + models + WearPaths (brings coroutines via api).
+    implementation("com.ambientlink:core-android:0.1.0")
+
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.activity:activity-compose:1.9.2")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")

@@ -18,7 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ambientlink.glasses.data.Session
+import com.ambientlink.core.Session
 
 /**
  * Glanceable session list for display glasses.

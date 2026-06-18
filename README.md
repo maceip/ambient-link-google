@@ -36,22 +36,22 @@ app/src/main/                              # Android XR glasses
   java/com/ambientlink/glasses/
     GlassesMainActivity.kt                 # projected activity + capability gate
     ui/HomeScreen.kt                       # Glimmer session list UI
-    data/RelayClient.kt                    # polls the Ambient Link relay
-    data/Session.kt                        # session model
+    link/ProjectedGlassLink.kt             # GlassLink impl (mirrors CosmoGlassManager)
 
 wear/src/main/                             # Wear OS watch
   AndroidManifest.xml                      # standalone watch app
   java/com/ambientlink/watch/
-    WatchActivity.kt                       # ComponentActivity + relay lifecycle
+    WatchActivity.kt                       # ComponentActivity + relay lifecycle (15s poll)
     ui/SessionListScreen.kt                # Wear Compose ScalingLazyColumn + TitleCard
-    data/RelayClient.kt                    # polls the relay (longer interval for battery)
-    data/Session.kt                        # session model
+    link/WatchDataLayer.kt                 # phone-tethered /ambientlink data-layer surface
 ```
 
-> Both modules currently carry their own `RelayClient`/`Session` copies. These are
-> identical and tagged `TODO(shared)` — they should collapse into a shared
-> `:core-android` library (tracked in `ambient-link-core`) so glasses, watch, and
-> phone consume one relay implementation.
+> `RelayClient`, `Session`, `GlassLink`, `EphemeralBuffer`, `Throttle`, and the
+> `/ambientlink` `WearPaths`/enums now live once in the shared
+> **`com.ambientlink:core-android`** library (in `ambient-link-core/core-android`).
+> Both `:app` and `:wear` depend on it via a Gradle composite build
+> (`includeBuild("../ambient-link-core/core-android")`), so there are no more
+> duplicated copies. Requires `ambient-link-core` checked out as a sibling repo.
 
 ## Wear OS watch
 

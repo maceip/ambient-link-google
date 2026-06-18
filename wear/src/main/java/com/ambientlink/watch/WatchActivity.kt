@@ -4,8 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ambientlink.core.RelayClient
 import com.ambientlink.watch.BuildConfig
-import com.ambientlink.watch.data.RelayClient
 import com.ambientlink.watch.ui.SessionListScreen
 
 /**
@@ -18,7 +18,8 @@ import com.ambientlink.watch.ui.SessionListScreen
  */
 class WatchActivity : ComponentActivity() {
 
-    private val relay by lazy { RelayClient(BuildConfig.AMBIENT_LINK_RELAY) }
+    // Cool poll interval to protect wrist battery (vs. the glasses' hot ~5s).
+    private val relay by lazy { RelayClient(BuildConfig.AMBIENT_LINK_RELAY, pollMs = 15_000L) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -2,7 +2,8 @@ package com.ambientlink.glasses.link
 
 import android.content.Context
 import android.graphics.Bitmap
-import com.ambientlink.glasses.data.EphemeralBuffer
+import com.ambientlink.core.EphemeralBuffer
+import com.ambientlink.core.GlassLink
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

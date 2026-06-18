@@ -16,7 +16,7 @@ import androidx.wear.compose.material3.AppScaffold
 import androidx.wear.compose.material3.ScreenScaffold
 import androidx.wear.compose.material3.Text
 import androidx.wear.compose.material3.TitleCard
-import com.ambientlink.watch.data.Session
+import com.ambientlink.core.Session
 
 /**
  * Wrist surface for Ambient Link: a glanceable, rotary-scrollable list of live
