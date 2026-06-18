@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:label="Ambient Link"
+        android:supportsRtl="true">
+
+        <!--
+          Projected activity: runs inside the phone app and is projected to the
+          Android XR display glasses. The XR_PROJECTED display category is what
+          tells the system this Activity targets glasses.
+        -->
+        <activity
+            android:name=".GlassesMainActivity"
+            android:exported="true"
+            android:requiredDisplayCategory="android.hardware.display.category.XR_PROJECTED">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <!-- Discoverable by Gemini voice commands on glasses. -->
+                <category android:name="android.intent.category.XR_PROJECTED_LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>
