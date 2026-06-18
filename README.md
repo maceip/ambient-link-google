@@ -69,6 +69,27 @@ Pin the Wear Compose versions in `wear/build.gradle.kts` (`TODO(wear)`). For
 phone-tethered watches, the Wearable Data Layer path (proxy through the phone) is
 stubbed but not wired.
 
+## Companion-link architecture (from `glasses_link.md`)
+
+The recovered Cosmo teardown in [`glasses_link.md`](glasses_link.md) shows the
+glasses transport is **vendor-hidden behind a service boundary** — the app only
+touches a stable public shape. We adopt that shape as the vendor-neutral
+[`GlassLink`](https://github.com/maceip/ambient-link-core/blob/main/contracts/GlassLink.kt)
+contract (canonical in `ambient-link-core/contracts/`, full plan in
+[`ROUTING.md`](https://github.com/maceip/ambient-link-core/blob/main/ROUTING.md)).
+
+This repo implements it for Android XR, copying Cosmo's performance patterns:
+
+- `app/.../link/GlassLink.kt` — the contract (copy of core).
+- `app/.../link/ProjectedGlassLink.kt` — projected impl modeled on `CosmoGlassManager`:
+  reactive `connected`/`bound` gates, **idempotent** bind guard, **frame throttling**
+  (1 frame / 10s, matching `FRAME_PROCESS_INTERVAL_MS`), audio passthrough to the
+  shared STT sink.
+- `app/.../data/EphemeralBuffer.kt` — TTL ring buffer (mirrors `InMemoryEphemeralBuffer`).
+- `wear/.../link/WatchDataLayer.kt` — `/ambientlink/...` data-layer paths mirroring
+  Cosmo's `/cosmowear/...` (messages for control/state, a channel for mic audio with
+  an explicit stop).
+
 ## Relay
 
 Reuses the existing Ambient Link relay (same one the Meta app reads):
