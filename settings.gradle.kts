@@ -15,3 +15,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "ambient-link-google"
 include(":app")
+include(":wear")
