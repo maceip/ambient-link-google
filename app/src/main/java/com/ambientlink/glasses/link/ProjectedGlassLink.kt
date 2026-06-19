@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import com.ambientlink.core.EphemeralBuffer
 import com.ambientlink.core.GlassLink
+import com.ambientlink.core.Throttle
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -51,7 +52,8 @@ class ProjectedGlassLink(
     private var bindJob: Job? = null
 
     private var frameSink: ((GlassLink.Frame) -> Unit)? = null
-    private var lastFrameAt = 0L
+    /** Shared leading-edge gate: one frame per [frameIntervalMs] (Cosmo 0.1 fps). */
+    private val frameThrottle = Throttle(frameIntervalMs)
     private var imageCaptureOn = false
     private var audioSink: ((ByteArray, Int) -> Unit)? = null
 
@@ -83,6 +85,7 @@ class ProjectedGlassLink(
 
     override fun startImageCapture() {
         imageCaptureOn = true
+        frameThrottle.reset(FRAME_KEY) // first frame of a capture is never delayed
         // TODO(xr): service.startImageCapture()
     }
 
@@ -98,8 +101,7 @@ class ProjectedGlassLink(
      */
     fun onCameraBitmap(bitmap: Bitmap, tsMillis: Long = System.currentTimeMillis()) {
         if (!imageCaptureOn) return
-        if (tsMillis - lastFrameAt < frameIntervalMs) return // drop; matches FRAME_PROCESS_INTERVAL_MS
-        lastFrameAt = tsMillis
+        if (!frameThrottle.allow(FRAME_KEY, tsMillis)) return // drop; matches FRAME_PROCESS_INTERVAL_MS
         cameraBuffer.add(bitmap, tsMillis)
         frameSink?.invoke(
             GlassLink.Frame(bitmap.width, bitmap.height, ByteArray(0), tsMillis)
@@ -123,6 +125,10 @@ class ProjectedGlassLink(
 
     override fun clear() {
         cameraBuffer.clear()
-        lastFrameAt = 0L
+        frameThrottle.reset(FRAME_KEY)
+    }
+
+    private companion object {
+        const val FRAME_KEY = "camera"
     }
 }
